@@ -33,10 +33,16 @@ app.use(morgan("dev"));
 //import routes
 const primaryDataRoute  = require('./routes/primaryData');
 const eventsDataRoute  = require('./routes/eventsData');
+const organizationsDataRoute  = require('./routes/organizationssData');
+const events2DataRoute  = require('./routes/events2Data');
+const usersDataRoute  = require('./routes/usersData');
 
 //setup middle ware for routes
 app.use('/primaryData', primaryDataRoute);
-app.use('/eventData', eventsDataRoute)
+app.use('/eventData', eventsDataRoute);
+app.use('/organizationData', organizationsDataRoute);
+app.use('/event2Data', events2DataRoute);
+app.use('/userData', usersDataRoute);
 
 app.listen(PORT, () => {
   console.log("Server started listening on port : ", PORT);
