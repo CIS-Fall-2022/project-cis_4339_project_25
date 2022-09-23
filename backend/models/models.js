@@ -89,11 +89,11 @@ let eventDataSchema = new Schema({
 
 let organizationDataSchema = new Schema({
     _id: {type: String, default: uuid.v1},
-    organizationName: {type: String, require: True},
+    organizationName: {type: String, require: true},
     organizationInformation: {type: String},
     organizationContact: {
-        email: {type: String, require: True},
-        phoneNumber: {type: Array, require: True},
+        email: {type: String, require: true},
+        phoneNumber: {type: Array, require: true},
         address: {
             line1: {type: String},
             line2: {type: String},
@@ -108,28 +108,28 @@ let organizationDataSchema = new Schema({
 
 let eventDataSchema2 = new Schema({
     _id: {type: String, default: uuid.v1},
-    eventName: {type: String, require: True},
-    eventDate: {type: Date, require: True},
+    eventName: {type: String, require: true},
+    eventDate: {type: Date, require: true},
     eventInfo: {type: String},
     eventAttendees: [{
         userid: {type: String},
         date_signup: {type: Date}
     }],
     access: {
-        orgid: {type: String, require: True}
+        orgid: {type: String, require: true}
     }
 }, {
-    collection: 'eventData'
+    collection: 'eventData2'
 });
 
 let userDataSchema = new Schema({
     _id: {type: String, default: uuid.v1},
-    firstName: {type: String, require: True},
+    firstName: {type: String, require: true},
     middleName: {type: String},
-    lastName: {type: String, require: True},
+    lastName: {type: String, require: true},
     userContact: {
         email: {type: String},
-        phoneNumber: {type: Array, require: True},
+        phoneNumber: {type: Array, require: true},
         address: {
             line1: {type: String},
             line2: {type: String},
@@ -139,7 +139,7 @@ let userDataSchema = new Schema({
         },
     },
     access: {
-        orgid: {type: String, require: True}
+        orgid: {type: String, require: true}
     }
 }, {
     collection: 'userData',
