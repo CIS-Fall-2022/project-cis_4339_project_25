@@ -17,10 +17,15 @@ let { eventdata2 } = require("../models/models");
 }
 
 ADDING users to event example
+http://127.0.0.1:3000/event2Data/addAttendee/947dfb10-3ad6-11ed-9108-0b10f13c1449
+string after addAttendee/ is the ID of the event
 {
-    "date_signup": ""
+    "userid": "5f052090-3ad5-11ed-941c-5fe58bea6717",
+    "date_signup": "09/25/2022"
 }
-
+userid is the id of the user while the date sign up is the current date
+there's a check if the user is already signed up for the same event
+return message of already signed up and date that they did it
 */
 
 //GET all entries
@@ -117,7 +122,7 @@ router.put("/:id", (req, res, next) => {
 router.put("/addAttendee/:id", (req, res, next) => {
     //only add attendee if not yet signed up
     eventdata2.find( 
-        { _id: req.params.id, userid: req.body.userid }, 
+        { _id: req.params.id, eventAttendees: {$elemMatch: {userid: req.body.userid}} }, 
         (error, data) => { 
             if (error) {
                 return next(error); //need fix
@@ -135,6 +140,10 @@ router.put("/addAttendee/:id", (req, res, next) => {
                             }
                         }
                     );
+                }
+                if (data.length > 0) {
+                    var signupdate = data[0].eventAttendees.filter(user => user.userid === req.body.userid)[0].date_signup.toDateString();
+                    res.json(`You already signed up for the event on ${signupdate}.`);
                 }
                 
             }
