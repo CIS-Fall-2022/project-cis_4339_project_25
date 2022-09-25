@@ -85,7 +85,7 @@ router.get("/users/:id", (req, res, next) => {
     )
 });
 
-/*
+
 
 //POST
 router.post("/", (req, res, next) => { 
@@ -103,7 +103,7 @@ router.post("/", (req, res, next) => {
     organizationdata.updatedAt;
     organizationdata.createdAt instanceof Date;
 });
-
+/*
 //PUT update organization, put org ID after / then put update info in body
 router.put("/:id", (req, res, next) => { 
     organizationdata.findOneAndUpdate( 
