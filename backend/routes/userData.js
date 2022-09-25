@@ -1,34 +1,13 @@
 const express = require("express");
 const router = express.Router();
+require("dotenv").config();  
 
 //importing data model schemas
 let { userdata } = require("../models/models");
-let { eventdata2 } = require("../models/models"); 
+let { eventdata } = require("../models/models"); 
 
-/* add events on postman example
+var orgaccess = process.env.ORGANIZATION_ACCESS;
 
-{
-    "firstName": "",
-    "middleName": "",
-    "lastName": "",
-    "userContact": {
-        "email": "",
-        "phoneNumber": "",
-        "address": {
-            "line1": "",
-            "line2": "",
-            "city": "",
-            "county": "",
-            "zip": ""
-        }
-    },
-    "access": {
-        "orgid": ""
-    }
-}
-
-
-*/
 
 //GET all users
 router.get("/", (req, res, next) => { 
@@ -54,16 +33,14 @@ router.get("/id/:id", (req, res, next) => {
     })
 });
 
-//GET entries based on search query
-//Ex: '...?eventName=Food&searchBy=name' 
+//GET user entries based on search query
+//Ex: '...?lastName=Nguyen&searchBy=lastLame' 
 router.get("/search/", (req, res, next) => { 
     let dbQuery = "";
-    if (req.query["searchBy"] === 'name') {
-        dbQuery = { eventName: { $regex: `^${req.query["eventName"]}`, $options: "i" } }
-    } else if (req.query["searchBy"] === 'date') {
-        dbQuery = {
-            date:  req.query["eventDate"]
-        }
+    if (req.query["searchBy"] === 'firstName') {
+        dbQuery = { firstName: { $regex: `^${req.query["firstName"]}`, $options: "i" } }
+    } else if (req.query["searchBy"] === 'lastName') {
+        dbQuery = { firstName: { $regex: `^${req.query["lastName"]}`, $options: "i" } }
     };
     userdata.find( 
         dbQuery, 
@@ -77,22 +54,10 @@ router.get("/search/", (req, res, next) => {
     );
 });
 
-//GET events for which a client is signed up
-router.get("/events/:id", (req, res, next) => { 
-    eventdata2.find( 
-        { eventAttendees: req.params.id }, 
-        (error, data) => { 
-            if (error) {
-                return next(error);
-            } else {
-                res.json(data);
-            }
-        }
-    );
-});
 
 //POST
 router.post("/", (req, res, next) => { 
+    req.body.access = { orgid: orgaccess };
     userdata.create( 
         req.body, 
         (error, data) => { 
@@ -105,6 +70,7 @@ router.post("/", (req, res, next) => {
     );
 });
 
+/*
 //PUT
 router.put("/:id", (req, res, next) => {
     userdata.findOneAndUpdate(
@@ -119,35 +85,67 @@ router.put("/:id", (req, res, next) => {
         }
     );
 });
-
-//PUT add attendee to event
-router.put("/addAttendee/:id", (req, res, next) => {
-    //only add attendee if not yet signed uo
-    userdata.find( 
-        { _id: req.params.id, attendees: req.body.attendee }, 
-        (error, data) => { 
+*/
+//put check organization access before updating user data
+router.put("/:id", (req, res, next) => {
+    userdata.findOne(
+        {_id: req.params.id},
+        (error, data) => {
             if (error) {
                 return next(error);
             } else {
-                if (data.length == 0) {
-                    eventdata.updateOne(
-                        { _id: req.params.id }, 
-                        { $push: { attendees: req.body.attendee } },
+                console.log(orgaccess, process.env.ORGANIZATION_ACCESS)
+                var authorized_access = data.access.orgid;
+                if (orgaccess == authorized_access) {
+                    userdata.findOneAndUpdate(
+                        {_id: req.params.id},
+                        req.body,
                         (error, data) => {
                             if (error) {
-                                consol
                                 return next(error);
                             } else {
-                                res.json(data);
+                                res.json("User Update Successful");
                             }
                         }
                     );
                 }
-                
+                else{
+                    res.json(`This organization does not have access to this user`);
+                }
             }
         }
     );
-    
 });
+
+
+router.delete("/:id", (req, res, next) => {
+    userdata.findOne(
+        {_id: req.params.id},
+        (error, data) => {
+            if (error) {
+                return next(error);
+            } else {
+                console.log(orgaccess, process.env.ORGANIZATION_ACCESS)
+                var authorized_access = data.access.orgid;
+                if (orgaccess == authorized_access) {
+                    userdata.deleteOne(
+                        {_id: req.params.id},
+                        (error, data) => {
+                            if (error) {
+                                return next(error);
+                            } else {
+                                res.json("User Delete Successful");
+                            }
+                        }
+                    );
+                }
+                else{
+                    res.json(`This organization does not have access to this User`);
+                }
+            }
+        }
+    );
+});
+
 
 module.exports = router;

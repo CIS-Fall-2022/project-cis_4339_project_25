@@ -1,8 +1,8 @@
 const express = require("express"); 
-const router = express.Router(); 
+const router = express.Router();
 
 //importing data model schemas
-let { primarydata } = require("../models/models"); 
+//let { primarydata } = require("../models/models"); 
 let { eventdata } = require("../models/models"); 
 let { organizationdata } = require("../models/models"); 
 let { userdata } = require("../models/models"); 
@@ -57,7 +57,7 @@ router.get("/id/:id", (req, res, next) => {
 //GET events for a single organization
 router.get("/events/:id", (req, res, next) => { 
     eventdata.find(
-        {_id: req.params.id},
+        {access: {orgid: req.params.id}},
         (error, data) => {
             if (error) {
                 return next(error);
@@ -67,12 +67,14 @@ router.get("/events/:id", (req, res, next) => {
         }
     )
 });
+
+
 
 
 //GET users for a single organization
 router.get("/users/:id", (req, res, next) => { 
     userdata.find(
-        {orgid: req.params.id},
+        {access: {orgid: req.params.id}},
         (error, data) => {
             if (error) {
                 return next(error);
@@ -82,6 +84,8 @@ router.get("/users/:id", (req, res, next) => {
         }
     )
 });
+
+/*
 
 //POST
 router.post("/", (req, res, next) => { 
@@ -114,5 +118,6 @@ router.put("/:id", (req, res, next) => {
         }
     );
 });
+*/
 
 module.exports = router;

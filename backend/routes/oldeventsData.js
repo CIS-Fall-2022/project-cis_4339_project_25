@@ -2,35 +2,11 @@ const express = require("express");
 const router = express.Router();
 
 //importing data model schemas
-let { eventdata2 } = require("../models/models"); 
-
-/* add events on postman example
-
-{
-    "eventName": "my test event",
-    "eventDate": "03/13/2023",
-    "eventInfo": "this is my event information",
-    "eventAttendees": [],
-    "access": {
-        "orgid": "7de45d00-3ad0-11ed-a9a4-05c1168e4d66"
-    }
-}
-
-ADDING users to event example
-http://127.0.0.1:3000/event2Data/addAttendee/947dfb10-3ad6-11ed-9108-0b10f13c1449
-string after addAttendee/ is the ID of the event
-{
-    "userid": "5f052090-3ad5-11ed-941c-5fe58bea6717",
-    "date_signup": "09/25/2022"
-}
-userid is the id of the user while the date sign up is the current date
-there's a check if the user is already signed up for the same event
-return message of already signed up and date that they did it
-*/
+let { eventdata } = require("../models/models"); 
 
 //GET all entries
 router.get("/", (req, res, next) => { 
-    eventdata2.find( 
+    eventdata.find( 
         (error, data) => {
             if (error) {
                 return next(error);
@@ -41,9 +17,9 @@ router.get("/", (req, res, next) => {
     ).sort({ 'updatedAt': -1 }).limit(10);
 });
 
-//GET single event by ID
+//GET single entry by ID
 router.get("/id/:id", (req, res, next) => { 
-    eventdata2.find({ _id: req.params.id }, (error, data) => {
+    eventdata.find({ _id: req.params.id }, (error, data) => {
         if (error) {
             return next(error)
         } else {
@@ -63,7 +39,7 @@ router.get("/search/", (req, res, next) => {
             date:  req.query["eventDate"]
         }
     };
-    eventdata2.find( 
+    eventdata.find( 
         dbQuery, 
         (error, data) => { 
             if (error) {
@@ -77,7 +53,7 @@ router.get("/search/", (req, res, next) => {
 
 //GET events for which a client is signed up
 router.get("/client/:id", (req, res, next) => { 
-    eventdata2.find( 
+    eventdata.find( 
         { attendees: req.params.id }, 
         (error, data) => { 
             if (error) {
@@ -91,7 +67,7 @@ router.get("/client/:id", (req, res, next) => {
 
 //POST
 router.post("/", (req, res, next) => { 
-    eventdata2.create( 
+    eventdata.create( 
         req.body, 
         (error, data) => { 
             if (error) {
@@ -105,7 +81,7 @@ router.post("/", (req, res, next) => {
 
 //PUT
 router.put("/:id", (req, res, next) => {
-    eventdata2.findOneAndUpdate(
+    eventdata.findOneAndUpdate(
         { _id: req.params.id },
         req.body,
         (error, data) => {
@@ -120,17 +96,17 @@ router.put("/:id", (req, res, next) => {
 
 //PUT add attendee to event
 router.put("/addAttendee/:id", (req, res, next) => {
-    //only add attendee if not yet signed up
-    eventdata2.find( 
-        { _id: req.params.id, eventAttendees: {$elemMatch: {userid: req.body.userid}} }, 
+    //only add attendee if not yet signed uo
+    eventdata.find( 
+        { _id: req.params.id, attendees: req.body.attendee }, 
         (error, data) => { 
             if (error) {
-                return next(error); //need fix
+                return next(error);
             } else {
                 if (data.length == 0) {
-                    eventdata2.updateOne(
+                    eventdata.updateOne(
                         { _id: req.params.id }, 
-                        { $push: { eventAttendees: req.body } },
+                        { $push: { attendees: req.body.attendee } },
                         (error, data) => {
                             if (error) {
                                 consol
@@ -140,10 +116,6 @@ router.put("/addAttendee/:id", (req, res, next) => {
                             }
                         }
                     );
-                }
-                if (data.length > 0) {
-                    var signupdate = data[0].eventAttendees.filter(user => user.userid === req.body.userid)[0].date_signup.toDateString();
-                    res.json(`You already signed up for the event on ${signupdate}.`);
                 }
                 
             }

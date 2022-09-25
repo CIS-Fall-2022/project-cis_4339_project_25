@@ -31,17 +31,17 @@ app.use(express.json());
 app.use(morgan("dev"));
 
 //import routes
-const primaryDataRoute  = require('./routes/primaryData');
-const eventsDataRoute  = require('./routes/eventsData');
+//const primaryDataRoute  = require('./routes/primaryData');
+//const eventsDataRoute  = require('./routes/eventsData');
 const organizationsDataRoute  = require('./routes/organizationsData');
-const events2DataRoute  = require('./routes/events2Data');
+const eventsDataRoute  = require('./routes/eventsData');
 const usersDataRoute  = require('./routes/userData');
 
 //setup middle ware for routes
-app.use('/primaryData', primaryDataRoute);
-app.use('/eventData', eventsDataRoute);
+//app.use('/primaryData', primaryDataRoute);
+//app.use('/eventData', eventsDataRoute);
 app.use('/organizationData', organizationsDataRoute);
-app.use('/event2Data', events2DataRoute);
+app.use('/eventData', eventsDataRoute);
 app.use('/userData', usersDataRoute);
 
 //orgs ID: "7de45d00-3ad0-11ed-a9a4-05c1168e4d66"
