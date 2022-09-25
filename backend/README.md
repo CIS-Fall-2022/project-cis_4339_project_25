@@ -17,6 +17,7 @@ add below to your .env file
 MONGO_URL = mongodb+srv://sa:XpawUFHULlQXmD3B@cluster0.hn0jxup.mongodb.net/test
 ORGANIZATION_NAME = Test Organization Name
 ORGANIZATION_ACCESS = 7de45d00-3ad0-11ed-a9a4-05c1168e4d66
+Organization access variable will have to change for each organization for them to access their user and event data
 ```
 
 ### Compiles and hot-reloads for development
