@@ -54,7 +54,7 @@ router.get("/search/", (req, res, next) => {
     );
 });
 
-
+/*
 //POST
 router.post("/", (req, res, next) => { 
     req.body.access = { orgid: orgaccess };
@@ -65,6 +65,35 @@ router.post("/", (req, res, next) => {
                 return next(error);
             } else {
                 res.json(data);
+            }
+        }
+    );
+});
+*/
+//
+router.post("/", (req, res, next) => {
+    userdata.find(
+        {'access.orgid': orgaccess, 'userContact.phoneNumber': req.body.userContact.phoneNumber},
+        (error, data) => {
+            if (error) {
+                return next(error);
+            } else {
+                if (data.length > 0) {
+                    res.json('User exist with that phone number already.');
+                }
+                if (data.length == 0) {
+                    req.body.access = { orgid: orgaccess };
+                    userdata.create( 
+                        req.body, 
+                        (error, data) => { 
+                            if (error) {
+                                return next(error);
+                            } else {
+                                res.json(data);
+                            }
+                        }
+                    );
+                }
             }
         }
     );
