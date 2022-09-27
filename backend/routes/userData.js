@@ -70,7 +70,7 @@ router.post("/", (req, res, next) => {
     );
 });
 */
-//
+//creating user with check for existing phone number under the organization ID
 router.post("/", (req, res, next) => {
     userdata.find(
         {'access.orgid': orgaccess, 'userContact.phoneNumber': req.body.userContact.phoneNumber},
