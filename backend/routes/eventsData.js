@@ -30,6 +30,25 @@ router.get("/id/:id", (req, res, next) => {
         }
     })
 });
+//db.eventData.aggregate([{$match: {_id: "ff502450-3d00-11ed-aba5-793b1e63ba89"}}, {$project: {mycount: {$size: {$filter: {input: "$eventAttendees", as: "attendees", cond: {$and: [{$gte: ["$$attendees.date_signup", ISODate("2022-03-01")]}, {$lte: ["$$attendees.date_signup", ISODate("2022-04-01")]}]}}}}}}])
+//GET user count for certain event by signup date range
+router.get("/count", (req, res, next) => {
+    eventdata.aggregate([{$match: {_id: req.body.eventid}}, 
+        {$project: 
+            {mycount: 
+                {$size: 
+                    {$filter: 
+                        {input: "$eventAttendees", as: "attendees", cond: 
+                        {$and: [{$gte: ["$$attendees.date_signup", new Date(req.body.startDate)]}, 
+                        {$lte: ["$$attendees.date_signup", new Date(req.body.endDate)]}]}}}}}}], 
+                        (error, data) => {
+        if (error) {
+            return next(error)
+        } else {
+            res.json(data)
+        }
+    })
+});
 
 //GET events by single date
 //Ex: '...?eventName=Food&searchBy=name' 
@@ -205,4 +224,10 @@ router.delete("/:id", (req, res, next) => {
 //db.eventData.aggregate([{$match: {_id: "ff502450-3d00-11ed-aba5-793b1e63ba89"}},{$project: {mycount: {$size: "$eventAttendees"}}}]) 
 //^^this works it returns 2 which is correct amount of user signing up but we need to figure out how to make it filter out by dates
 //db.eventData.aggregate([{$match: {_id: "ff502450-3d00-11ed-aba5-793b1e63ba89"}},{$project: {mycount: {$size: {$filter: {input: "$eventAttendees", as "attendees", cond: {$gt: ["$$attendees.date_signup", "2021-01-01"]}}}}}}])
+
+//db.eventData.aggregate([{$match: {_id: "ff502450-3d00-11ed-aba5-793b1e63ba89"}}, {$project: {mycount: {$filter: {input: "$eventAttendees", as: "attendees", cond: {$gte: ["$$attendees.date_signup", ISODate("2022-01-01")]}}}}}]) 
+//db.eventData.aggregate([{$match: {_id: "ff502450-3d00-11ed-aba5-793b1e63ba89"}}, {$project: {mycount: {$filter: {input: "$eventAttendees", as: "attendees", cond: {$and: [{$gte: ["$$attendees.date_signup", ISODate("2021-01-01")]}, {$lte: ["$$attendees.date_signup", ISODate("2022-01-01")]}]}}}}}])
+
+//WORKING FUNCTION BELOW
+//db.eventData.aggregate([{$match: {_id: "ff502450-3d00-11ed-aba5-793b1e63ba89"}}, {$project: {mycount: {$size: {$filter: {input: "$eventAttendees", as: "attendees", cond: {$and: [{$gte: ["$$attendees.date_signup", ISODate("2022-03-01")]}, {$lte: ["$$attendees.date_signup", ISODate("2022-04-01")]}]}}}}}}])
 module.exports = router;
