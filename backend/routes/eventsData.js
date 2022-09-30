@@ -202,4 +202,7 @@ router.delete("/:id", (req, res, next) => {
     );
 });
 
+//db.eventData.aggregate([{$match: {_id: "ff502450-3d00-11ed-aba5-793b1e63ba89"}},{$project: {mycount: {$size: "$eventAttendees"}}}]) 
+//^^this works it returns 2 which is correct amount of user signing up but we need to figure out how to make it filter out by dates
+//db.eventData.aggregate([{$match: {_id: "ff502450-3d00-11ed-aba5-793b1e63ba89"}},{$project: {mycount: {$size: {$filter: {input: "$eventAttendees", as "attendees", cond: {$gt: ["$$attendees.date_signup", "2021-01-01"]}}}}}}])
 module.exports = router;
