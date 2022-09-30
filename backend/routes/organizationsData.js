@@ -103,6 +103,22 @@ router.post("/", (req, res, next) => {
     organizationdata.updatedAt;
     organizationdata.createdAt instanceof Date;
 });
+
+//DELETE route to delete an organization
+router.delete("/:id", (req, res, next) => {
+    organizationdata.deleteOne(
+        {_id: req.params.id},
+        (error, data) => {
+            if (error) {
+                return next(error);
+            } else {
+                res.json("Organization Delete Successful");
+            }
+        }
+    );
+});
+
+
 /*
 //PUT update organization, put org ID after / then put update info in body
 router.put("/:id", (req, res, next) => { 
