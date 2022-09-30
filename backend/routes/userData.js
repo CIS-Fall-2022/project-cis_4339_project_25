@@ -163,10 +163,19 @@ router.delete("/:id", (req, res, next) => {
                             if (error) {
                                 return next(error);
                             } else {
-                                res.json("User Delete Successful");
+                                eventdata.updateMany(
+                                    {}, {$pull: {eventAttendees: {userid: req.params.id}}}, (error, data) => {
+                                        if (error) {
+                                            return next(error);
+                                        } else {
+                                            res.json("User Delete Successful, User Data was also deleted from events.");
+                                        }
+                                    }
+                                )
                             }
                         }
                     );
+
                 }
                 else{
                     res.json(`This organization does not have access to this User`);
