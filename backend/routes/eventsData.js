@@ -33,6 +33,11 @@ router.get("/id/:id", (req, res, next) => {
 //db.eventData.aggregate([{$match: {_id: "ff502450-3d00-11ed-aba5-793b1e63ba89"}}, {$project: {mycount: {$size: {$filter: {input: "$eventAttendees", as: "attendees", cond: {$and: [{$gte: ["$$attendees.date_signup", ISODate("2022-03-01")]}, {$lte: ["$$attendees.date_signup", ISODate("2022-04-01")]}]}}}}}}])
 //GET user count for certain event by signup date range
 router.get("/count", (req, res, next) => {
+    var curdate = new Date();
+    var curdatestring = new Date().toISOString().slice(0,10);
+    curdate.setMonth(curdate.getMonth() -2);
+    var bottomlimitdate = curdate.toISOString().slice(0,10);
+    console.log(curdatestring, bottomlimitdate)
     eventdata.aggregate([{$match: {_id: req.body.eventid}}, 
         {$project: 
             {mycount: 
@@ -42,6 +47,31 @@ router.get("/count", (req, res, next) => {
                         {$and: [{$gte: ["$$attendees.date_signup", new Date(req.body.startDate)]}, 
                         {$lte: ["$$attendees.date_signup", new Date(req.body.endDate)]}]}}}}}}], 
                         (error, data) => {
+        if (error) {
+            return next(error)
+        } else {
+            res.json(data)
+        }
+    })
+});
+
+//db.eventData.aggregate([{$project: {mycount: {$size: {$filter: {input: "$eventAttendees", as: "attendees", cond: {$and: [{$gte: ["$$attendees.date_signup", ISODate("2022-08-03")]}, {$lte: ["$$attendees.date_signup", ISODate("2022-10-03")]}]}}}}}}, {$match: {"mycount": {$gt: 0}}}])
+//GET all events that has user signed up in the past 2 months
+router.get("/countall", (req, res, next) => {
+    var curdate = new Date();
+    var curdatestring = new Date().toISOString().slice(0,10).toString();
+    curdate.setMonth(curdate.getMonth() -2);
+    var bottomlimitdate = curdate.toISOString().slice(0,10).toString();
+    console.log(curdatestring, bottomlimitdate)
+    eventdata.aggregate([
+        {$project: 
+            {mycount: 
+                {$size: 
+                    {$filter: 
+                        {input: "$eventAttendees", as: "attendees", cond: 
+                        {$and: [{$gte: ["$$attendees.date_signup", new Date(bottomlimitdate)]}, 
+                        {$lte: ["$$attendees.date_signup", new Date(curdatestring)]}]}}}}}},
+                    {$match: {"mycount": {$gt: 0}}}],(error, data) => {
         if (error) {
             return next(error)
         } else {
@@ -230,4 +260,8 @@ router.delete("/:id", (req, res, next) => {
 
 //WORKING FUNCTION BELOW
 //db.eventData.aggregate([{$match: {_id: "ff502450-3d00-11ed-aba5-793b1e63ba89"}}, {$project: {mycount: {$size: {$filter: {input: "$eventAttendees", as: "attendees", cond: {$and: [{$gte: ["$$attendees.date_signup", ISODate("2022-03-01")]}, {$lte: ["$$attendees.date_signup", ISODate("2022-04-01")]}]}}}}}}])
+//above return a specific table where poeple have signed up between certain date
+
+//below return ALL EVENTS WHERE USER HAVE SIGNED UP IN THE PAST 2 MONTHS
+//db.eventData.aggregate([{$project: {mycount: {$size: {$filter: {input: "$eventAttendees", as: "attendees", cond: {$and: [{$gte: ["$$attendees.date_signup", ISODate("2022-08-03")]}, {$lte: ["$$attendees.date_signup", ISODate("2022-10-03")]}]}}}}}}, {$match: {"mycount": {$gt: 0}}}])
 module.exports = router;
