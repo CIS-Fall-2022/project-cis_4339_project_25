@@ -247,6 +247,7 @@ export default {
             </label>
           </div>
           <!-- form field -->
+          <!--
           <div class="flex flex-col">
             <label class="block">
               <span class="text-gray-700">Alternative Phone Number</span>
@@ -257,7 +258,7 @@ export default {
                 v-model="client.phoneNumbers[0].secondaryPhone"
               />
             </label>
-          </div>
+          </div>-->
         </div>
 
         <!-- grid container -->

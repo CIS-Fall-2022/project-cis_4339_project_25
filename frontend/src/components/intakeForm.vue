@@ -11,26 +11,24 @@ export default {
   },
   data() {
     return {
-      client: {
+      clientnew: {
         firstName: "",
         middleName: "",
         lastName: "",
-        email: "",
-        phoneNumbers: [
-          {
-            primaryPhone: "",
-            secondaryPhone: "",
+        userContact: {
+          email: "",
+          phoneNumber: "",
+          address: {
+            line1: "",
+            line2: "",
+            city: "",
+            county: "",
+            zip: "",
           },
-        ],
-        address: {
-          line1: "",
-          line2: "",
-          city: "",
-          county: "",
-          zip: "",
         },
       },
     };
+    
   },
   methods: {
     async handleSubmitForm() {
@@ -38,29 +36,26 @@ export default {
       const isFormCorrect = await this.v$.$validate();
       // If no errors found. isFormCorrect = True then the form is submitted
       if (isFormCorrect) {
-        let apiURL = import.meta.env.VITE_ROOT_API + `/primarydata`;
+        let apiURL = import.meta.env.VITE_ROOT_API + `/userData/`;
         axios
-          .post(apiURL, this.client)
+          .post(apiURL, this.clientnew)
           .then(() => {
             alert("Client has been succesfully added.");
             this.$router.push("/findclient");
-            this.client = {
+            this.clientnew = {
               firstName: "",
               middleName: "",
               lastName: "",
-              email: "",
-              phoneNumbers: [
-                {
-                  primaryPhone: "",
-                  seondaryPhone: "",
+              userContact: {
+                email: "",
+                phoneNumber: "",
+                address: {
+                  line1: "",
+                  line2: "",
+                  city: "",
+                  county: "",
+                  zip: "",
                 },
-              ],
-              address: {
-                line1: "",
-                line2: "",
-                city: "",
-                county: "",
-                zip: "",
               },
             };
           })
@@ -73,18 +68,16 @@ export default {
   // sets validations for the various data properties
   validations() {
     return {
-      client: {
+      clientnew: {
         firstName: { required, alpha },
         lastName: { required, alpha },
-        email: { email },
-        address: {
+        userContact: {
+          email: { email },
+          phoneNumber: { required, numeric },
+          address: {
           city: { required },
-        },
-        phoneNumbers: [
-          {
-            primaryPhone: { required, numeric },
           },
-        ],
+        },
       },
     };
   },
@@ -107,12 +100,12 @@ export default {
               <input
                 type="text"
                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                v-model="client.firstName"
+                v-model="clientnew.firstName"
               />
-              <span class="text-black" v-if="v$.client.firstName.$error">
+              <span class="text-black" v-if="v$.clientnew.firstName.$error">
                 <p
                   class="text-red-700"
-                  v-for="error of v$.client.firstName.$errors"
+                  v-for="error of v$.clientnew.firstName.$errors"
                   :key="error.$uid"
                 >{{ error.$message }}!</p>
               </span>
@@ -127,7 +120,7 @@ export default {
                 type="text"
                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                 placeholder
-                v-model="client.middleName"
+                v-model="clientnew.middleName"
               />
             </label>
           </div>
@@ -141,12 +134,12 @@ export default {
                 type="text"
                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                 placeholder
-                v-model="client.lastName"
+                v-model="clientnew.lastName"
               />
-              <span class="text-black" v-if="v$.client.lastName.$error">
+              <span class="text-black" v-if="v$.clientnew.lastName.$error">
                 <p
                   class="text-red-700"
-                  v-for="error of v$.client.lastName.$errors"
+                  v-for="error of v$.clientnew.lastName.$errors"
                   :key="error.$uid"
                 >{{ error.$message }}!</p>
               </span>
@@ -162,12 +155,12 @@ export default {
                 type="email"
                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                 pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
-                v-model="client.email"
+                v-model="clientnew.userContact.email"
               />
-              <span class="text-black" v-if="v$.client.email.$error">
+              <span class="text-black" v-if="v$.clientnew.userContact.email.$error">
                 <p
                   class="text-red-700"
-                  v-for="error of v$.client.email.$errors"
+                  v-for="error of v$.clientnew.userContact.email.$errors"
                   :key="error.$uid"
                 >{{ error.$message }}!</p>
               </span>
@@ -182,18 +175,19 @@ export default {
                 type="text"
                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                 pattern="[0-9]{3}[0-9]{3}[0-9]{4}"
-                v-model="client.phoneNumbers[0].primaryPhone"
+                v-model="clientnew.userContact.phoneNumber"
               />
-              <span class="text-black" v-if="v$.client.phoneNumbers[0].primaryPhone.$error">
+              <span class="text-black" v-if="v$.clientnew.userContact.phoneNumber.$error">
                 <p
                   class="text-red-700"
-                  v-for="error of v$.client.phoneNumbers[0].primaryPhone.$errors"
+                  v-for="error of v$.clientnew.userContact.phoneNumber.$errors"
                   :key="error.$uid"
                 >{{ error.$message }}!</p>
               </span>
             </label>
           </div>
           <!-- form field -->
+          <!--
           <div class="flex flex-col">
             <label class="block">
               <span class="text-gray-700">Alternative Phone Number</span>
@@ -204,7 +198,7 @@ export default {
                 v-model="client.phoneNumbers[0].secondaryPhone"
               />
             </label>
-          </div>
+          </div>-->
         </div>
 
         <!-- grid container -->
@@ -217,7 +211,7 @@ export default {
               <input
                 type="text"
                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                v-model="client.address.line1"
+                v-model="clientnew.userContact.address.line1"
               />
             </label>
           </div>
@@ -228,7 +222,7 @@ export default {
               <input
                 type="text"
                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                v-model="client.address.line2"
+                v-model="clientnew.userContact.address.line2"
               />
             </label>
           </div>
@@ -240,12 +234,12 @@ export default {
               <input
                 type="text"
                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                v-model="client.address.city"
+                v-model="clientnew.userContact.address.city"
               />
-              <span class="text-black" v-if="v$.client.address.city.$error">
+              <span class="text-black" v-if="v$.clientnew.userContact.address.city.$error">
                 <p
                   class="text-red-700"
-                  v-for="error of v$.client.address.$errors"
+                  v-for="error of v$.clientnew.userContact.address.$errors"
                   :key="error.$uid"
                 >{{ error.$message }}!</p>
               </span>
@@ -259,7 +253,7 @@ export default {
               <input
                 type="text"
                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                v-model="client.address.county"
+                v-model="clientnew.userContact.address.county"
               />
             </label>
           </div>
@@ -270,7 +264,7 @@ export default {
               <input
                 type="text"
                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                v-model="client.address.zip"
+                v-model="clientnew.userContact.address.zip"
               />
             </label>
           </div>

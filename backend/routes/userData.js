@@ -37,10 +37,10 @@ router.get("/id/:id", (req, res, next) => {
 //Ex: '...?lastName=Nguyen&searchBy=lastLame' 
 router.get("/search/", (req, res, next) => { 
     let dbQuery = "";
-    if (req.query["searchBy"] === 'firstName') {
-        dbQuery = { firstName: { $regex: `^${req.query["firstName"]}`, $options: "i" } }
-    } else if (req.query["searchBy"] === 'lastName') {
-        dbQuery = { firstName: { $regex: `^${req.query["lastName"]}`, $options: "i" } }
+    if (req.query["searchBy"] === 'name') {
+        dbQuery = { firstName: { $regex: `^${req.query["firstName"]}`, $options: "i" }, lastName: { $regex: `^${req.query["lastName"]}`, $options: "i" } }
+    } else if (req.query["searchBy"] === 'number') {
+        dbQuery = { "userContact.phoneNumber": { $regex: `^${req.query["number"]}`, $options: "i" } }
     };
     userdata.find( 
         dbQuery, 
@@ -72,6 +72,7 @@ router.post("/", (req, res, next) => {
 */
 //creating user with check for existing phone number under the organization ID
 router.post("/", (req, res, next) => {
+    console.log(req.body);
     userdata.find(
         {'access.orgid': orgaccess, 'userContact.phoneNumber': req.body.userContact.phoneNumber},
         (error, data) => {
