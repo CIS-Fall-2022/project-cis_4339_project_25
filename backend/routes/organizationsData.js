@@ -7,6 +7,7 @@ let { eventdata } = require("../models/models");
 let { organizationdata } = require("../models/models"); 
 let { userdata } = require("../models/models"); 
 
+var orgaccess = process.env.ORGANIZATION_ACCESS;
 /* add organization testing on postman
 {
     "organizationName": "my testorganizationame",
@@ -53,6 +54,19 @@ router.get("/id/:id", (req, res, next) => {
     );
 });
 
+//GET for front end to get the current organization information
+router.get("/currentorg", (req, res, next) => {
+    organizationdata.find(
+        { _id: orgaccess},
+        (error, data) => {
+            if (error) {
+                return next(error);
+            } else {
+                res.json(data);
+            }
+        }
+    )
+})
 
 //GET events for a single organization
 router.get("/events/:id", (req, res, next) => { 
