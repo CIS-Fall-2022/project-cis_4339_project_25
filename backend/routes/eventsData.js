@@ -65,12 +65,13 @@ router.get("/countall", (req, res, next) => {
     console.log(curdatestring, bottomlimitdate)
     eventdata.aggregate([
         {$project: 
-            {mycount: 
+            {eventName: 1 ,mycount: 
                 {$size: 
                     {$filter: 
                         {input: "$eventAttendees", as: "attendees", cond: 
                         {$and: [{$gte: ["$$attendees.date_signup", new Date(bottomlimitdate)]}, 
-                        {$lte: ["$$attendees.date_signup", new Date(curdatestring)]}]}}}}}},
+                        {$lte: ["$$attendees.date_signup", new Date(curdatestring)]}]}}}}},
+                    },
                     {$match: {"mycount": {$gt: 0}}}],(error, data) => {
         if (error) {
             return next(error)
