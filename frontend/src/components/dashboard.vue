@@ -3,6 +3,7 @@
     <div>
       <h1 class="font-bold text-4xl text-red-700 tracking-widest text-center mt-10">Welcome to the Main Page</h1>
     </div>
+    <div></div>
     <Bar
       :chart-options="chartOptions"
       :chart-data="chartData"
