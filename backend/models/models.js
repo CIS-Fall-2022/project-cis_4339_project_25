@@ -111,6 +111,13 @@ let eventDataSchema = new Schema({
     eventName: {type: String, require: true},
     eventDate: {type: Date, require: true},
     eventInfo: {type: String},
+    eventAddress: {
+        line1: {type: String},
+        line2: {type: String},
+        city: {type: String},
+        county: {type: String},
+        zip: {type: String}
+    },
     eventAttendees: [{
         userid: {type: String},
         date_signup: {type: Date}
