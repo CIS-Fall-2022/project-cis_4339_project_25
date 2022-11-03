@@ -211,7 +211,7 @@ export default {
       event: {
         eventName: "",
         services: [],
-        date: "",
+        eventDate: "",
         address: {
           line1: "",
           line2: "",
