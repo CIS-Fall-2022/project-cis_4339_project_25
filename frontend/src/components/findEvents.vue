@@ -114,11 +114,11 @@ export default {
       if (this.searchBy === "Event Name") {
         apiURL =
           import.meta.env.VITE_ROOT_API +
-          `/eventdata/search/?eventName=${this.eventName}&searchBy=name`;
+          `/eventdata/search/?searchBy=name&eventName=${this.eventName}`;
       } else if (this.searchBy === "Event Date") {
         apiURL =
           import.meta.env.VITE_ROOT_API +
-          `/eventdata/search/?eventDate=${this.eventDate}&searchBy=date`;
+          `/eventdata/search/?searchBy=date&eventDate=${this.eventDate}`;
       }
       axios.get(apiURL).then((resp) => {
         this.queryData = resp.data;
