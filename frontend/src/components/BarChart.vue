@@ -55,14 +55,12 @@
     data() {
       return {
         chartData: {
-          labels: ["my", "list", "of"],
-          datasets: [ { data: [5, 10, 15] } ]
-        },
-        chartOptions: {
-          responsive: true
-        },
-        Xaxis: [],
-        Yaxis: [],
+              labels: [],
+              datasets: [ { data: [] } ]
+            },
+            chartOptions: {
+              responsive: true
+            },
       }
     },
     mounted() {

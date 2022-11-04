@@ -3,7 +3,21 @@
     <div>
       <h1 class="font-bold text-4xl text-red-700 tracking-widest text-center mt-10">Welcome to the Main Page</h1>
     </div>
-    <div></div>
+    <div>{{databasedata}}</div>
+    <table>
+      <thead class="bg-gray-50 text-xl">
+            <tr>
+              <th class="p-4 text-left">Event Name</th>
+              <th class="p-4 text-left">Last 2 Months Signup</th>
+            </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-300">
+        <tr v-for="item in databasedata" :key="item._id">
+        <td class="p-2 text-left">{{ item.eventName}}</td>
+        <td class="p-2 text-left">{{ item.mycount}}</td>
+        </tr>
+      </tbody>
+    </table>
     <Bar
       :chart-options="chartOptions"
       :chart-data="chartData"
@@ -19,30 +33,17 @@
 </template>
 <script>
 import axios from "axios";
-import { Bar } from 'vue-chartjs'
-import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
-ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
 export default {
     data() {
         return {
-            chartData: {
-              labels: [],
-              datasets: [ { data: [] } ]
-            },
-            chartOptions: {
-              responsive: true
-            },
+            databasedata: {},
         };
     },
-    mounted() {
+    async mounted() {
         let newnewapiURL = import.meta.env.VITE_ROOT_API + `/eventData/countall`;
         axios.get(newnewapiURL).then((resp) => {
-            resp.data.forEach(element => {
-            this.chartData.labels.push(element.eventName);
-            this.chartData.datasets[0].data.push(element.mycount);
-
-            });
+          this.databasedata = resp.data;
         });
     },
     methods: {
@@ -50,37 +51,5 @@ export default {
             this.$router.push({ name: routeName });
         },
     },
-    name: 'BarChart',
-    components: { Bar },
-    props: {
-      chartId: {
-        type: String,
-        default: 'bar-chart'
-      },
-      datasetIdKey: {
-        type: String,
-        default: 'label'
-      },
-      width: {
-        type: Number,
-        default: 25
-      },
-      height: {
-        type: Number,
-        default: 25
-      },
-      cssClasses: {
-        default: '',
-        type: String
-      },
-      styles: {
-        type: Object,
-        default: () => {}
-      },
-      plugins: {
-        type: Object,
-        default: () => {}
-      }
-    }
 };
 </script>
