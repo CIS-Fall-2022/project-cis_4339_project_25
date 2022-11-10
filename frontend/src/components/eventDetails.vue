@@ -34,13 +34,13 @@
               <span style="color:#ff0000">*</span>
               <input
                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                v-model="event.date"
+                v-model="event.eventDate"
                 type="date"
               />
-              <span class="text-black" v-if="v$.event.date.$error">
+              <span class="text-black" v-if="v$.event.eventDate.$error">
                 <p
                   class="text-red-700"
-                  v-for="error of v$.event.date.$errors"
+                  v-for="error of v$.event.eventDate.$errors"
                   :key="error.$uid"
                 >{{ error.$message }}!</p>
               </span>
@@ -78,7 +78,7 @@
                 type="text"
                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                 placeholder
-                v-model="event.address.line1"
+                v-model="event.eventAddress.line1"
               />
             </label>
           </div>
@@ -90,7 +90,7 @@
                 type="text"
                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                 placeholder
-                v-model="event.address.line2"
+                v-model="event.eventAddress.line2"
               />
             </label>
           </div>
@@ -102,7 +102,7 @@
                 type="text"
                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                 placeholder
-                v-model="event.address.city"
+                v-model="event.eventAddress.city"
               />
             </label>
           </div>
@@ -115,7 +115,7 @@
                 type="text"
                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                 placeholder
-                v-model="event.address.county"
+                v-model="event.eventAddress.county"
               />
             </label>
           </div>
@@ -127,7 +127,7 @@
                 type="text"
                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                 placeholder
-                v-model="event.address.zip"
+                v-model="event.eventAddress.zip"
               />
             </label>
           </div>
@@ -170,7 +170,7 @@
               </thead>
               <tbody class="divide-y divide-gray-300">
                 <tr
-                  @click="editClient(client.attendeeID)"
+                  @click="editClient(client.userID)"
                   v-for="client in attendeeData"
                   :key="client._id"
                 >
@@ -228,10 +228,9 @@ export default {
         let data = resp.data[0];
         this.event.eventName = data.eventName;
         console.log(data.date);
-        this.event.date = DateTime.fromISO(data.date).plus({ days: 1 }).toISODate();
-        this.event.description = data.description;
-        this.checkedServices = data.services;
-        this.event.address = data.address;
+        this.event.eventDate = DateTime.fromISO(data.date).plus({ days: 1 }).toISODate();
+        this.event.eventInfo = data.eventInfo;
+        this.event.eventAddress = data.eventAddress;
         this.attendeeIDs = data.attendees;
         for (let i = 0; i < this.attendeeIDs.length; i++) {
           axios
@@ -275,7 +274,7 @@ export default {
     return {
       event: {
         eventName: { required },
-        date: { required },
+        eventDate: { required },
       },
     };
   },
