@@ -170,15 +170,15 @@
               </thead>
               <tbody class="divide-y divide-gray-300">
                 <tr
-                  @click="editClient(client.userID)"
-                  v-for="client in attendeeData"
+                  @click="editClient(client._id)"
+                  v-for="client in userData"
                   :key="client._id"
                 >
                   <td
                     class="p-2 text-left"
-                  >{{ client.attendeeFirstName + " " + client.attendeeLastName }}</td>
-                  <td class="p-2 text-left">{{ client.attendeeCity }}</td>
-                  <td class="p-2 text-left">{{ client.attendeePhoneNumber }}</td>
+                  >{{ client.firstName + " " + client.lastName }}</td>
+                  <td class="p-2 text-left">{{ client.userContact.address.city }}</td>
+                  <td class="p-2 text-left">{{ client.userContact.phoneNumber }}</td>
                 </tr>
               </tbody>
             </table>
@@ -201,21 +201,20 @@ export default {
   },
   data() {
     return {
-      attendeeIDs: [],
-      attendeeData: [],
-      checkedServices: [],
+      userIDs: [],
+      userData: [],
       event: {
         eventName: "",
-        services: [],
-        date: "",
-        address: {
+        eventDate: "",
+        eventInfo: "",
+        eventAddress: {
           line1: "",
           line2: "",
           city: "",
           county: "",
           zip: "",
         },
-        description: "",
+      eventAttendees: [],
       },
     };
   },
@@ -236,7 +235,7 @@ export default {
           axios
             .get(
               import.meta.env.VITE_ROOT_API +
-                `/primarydata/id/${this.attendeeIDs[i]}`
+                `/userData/id/${this.userIDs[i]}`
             )
             .then((resp) => {
               let data = resp.data[0];
