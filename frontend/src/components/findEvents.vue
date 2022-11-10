@@ -13,7 +13,7 @@
             v-model="searchBy"
           >
             <option value="Event Name">Event Name</option>
-            <option value="Event Date">Event Date</option>
+
           </select>
         </div>
         <div class="flex flex-col" v-if="searchBy === 'Event Name'">
@@ -28,15 +28,7 @@
           </label>
         </div>
         <!-- Displays event date search field -->
-        <div class="flex flex-col" v-if="searchBy === 'Event Date'">
-          <input
-            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-            type="text"
-            placeholder="mm-dd-yyyy"
-            v-model="eventDate"
-            v-on:keyup.enter="handleSubmitForm"
-          />
-        </div>
+
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10">
         <div></div>
