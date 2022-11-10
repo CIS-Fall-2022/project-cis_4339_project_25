@@ -37,13 +37,13 @@
               <span style="color:#ff0000">*</span>
               <input
                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                v-model="event.date"
+                v-model="event.eventDate"
                 type="date"
               />
-              <span class="text-black" v-if="v$.event.date.$error">
+              <span class="text-black" v-if="v$.event.eventDate.$error">
                 <p
                   class="text-red-700"
-                  v-for="error of v$.event.date.$errors"
+                  v-for="error of v$.event.eventDate.$errors"
                   :key="error.$uid"
                 >{{ error.$message }}!</p>
               </span>
@@ -80,7 +80,7 @@
                 type="text"
                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                 placeholder
-                v-model="event.address.line1"
+                v-model="event.eventAddress.line1"
               />
             </label>
           </div>
@@ -92,7 +92,7 @@
                 type="text"
                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                 placeholder
-                v-model="event.address.line2"
+                v-model="event.eventAddress.line2"
               />
             </label>
           </div>
@@ -104,7 +104,7 @@
                 type="text"
                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                 placeholder
-                v-model="event.address.city"
+                v-model="event.eventAddress.city"
               />
             </label>
           </div>
@@ -117,7 +117,7 @@
                 type="text"
                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                 placeholder
-                v-model="event.address.county"
+                v-model="event.eventAddress.county"
               />
             </label>
           </div>
@@ -129,7 +129,7 @@
                 type="text"
                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                 placeholder
-                v-model="event.address.zip"
+                v-model="event.eventAddress.zip"
               />
             </label>
           </div>
@@ -152,19 +152,17 @@ export default {
   },
   data() {
     return {
-      checkedServices: [],
       event: {
         eventName: "",
-        services: [],
         eventDate: "",
-        address: {
+        eventInfo: "",
+        eventAddress: {
           line1: "",
           line2: "",
           city: "",
           county: "",
           zip: "",
-        },
-        description: "",
+        }
       },
     };
   },
@@ -183,18 +181,16 @@ export default {
             this.$router.push("/findEvents");
             this.client = {
               eventName: "",
-              services: [],
-              date: "",
-              address: {
+              eventDate: "",
+              eventInfo:"",
+              eventAddress: {
                 line1: "",
                 line2: "",
                 city: "",
                 county: "",
                 zip: "",
-              },
-              description: "",
+              }
             };
-            this.checkedServices = [];
           })
           .catch((error) => {
             console.log(error);
@@ -207,7 +203,7 @@ export default {
     return {
       event: {
         eventName: { required },
-        date: { required },
+        eventDate: { required },
       },
     };
   },
