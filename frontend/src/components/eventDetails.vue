@@ -176,9 +176,9 @@
                 >
                   <td
                     class="p-2 text-left"
-                  >{{ attendeeData.firstName + " " + attendeeData.lastName }}</td> //CHANGEATTENDEE DATA TO USER DATA
-                  <td class="p-2 text-left">{{ attendeeData.userContact.address.city }}</td>
-                  <td class="p-2 text-left">{{ attendeeData.userContact.phoneNumber }}</td>
+                  >{{ userData.firstName + " " + userData.lastName }}</td> 
+                  <td class="p-2 text-left">{{ userData.userContact.address.city }}</td>
+                  <td class="p-2 text-left">{{ userData.userContact.phoneNumber }}</td>
                 </tr>
               </tbody>
             </table>
@@ -201,8 +201,17 @@ export default {
   },
   data() {
     return {
-      //userIDs: [],
-      userData: [],
+      // userIDs: [],
+      userData: {
+        firstName:"",
+        lastName:"",
+        userContact:{
+          phoneNumber:"",
+          address:{
+            city:""
+          },
+        }
+      },
       event: {
         eventName: "",
         eventDate: "",
@@ -211,11 +220,13 @@ export default {
           line1: "",
           line2: "",
           city: "",
-          county: "",
+          county: "", 
           zip: "",
         },
-      eventAttendees: [],
-      },
+        eventAttendees:[
+          {user_id:""}
+        ]
+      }
     };
   },
   beforeMount() {
@@ -231,6 +242,7 @@ export default {
         this.event.eventInfo = data.eventInfo;
         this.event.eventAddress = data.eventAddress;
         this.event.eventAttendees = data.eventAttendees;
+        // this.event.user_id = data.eventAttendees.user_id;
         for (let i = 0; i < this.eventAttendees.length; i++) { 
           axios
             .get(
@@ -240,11 +252,11 @@ export default {
             .then((resp) => {
               let data = resp.data[0];
               this.userData.push({
-                attendeeID: this.user_id[i],   ///[I]. OR .[]
-                attendeeFirstName: data.firstName,
-                attendeeLastName: data.lastName,
-                attendeeCity: data.userContact.address.city,
-                attendeePhoneNumber: data.userContact.phoneNumber[0],
+                _id: this.user_id[i],   ///[I]. OR .[]
+                firstName: data.firstName,
+                lastName: data.lastName,
+                city: data.userContact.address.city,
+                phoneNumber: data.userContact.phoneNumber[0],
               });
             });
         }
