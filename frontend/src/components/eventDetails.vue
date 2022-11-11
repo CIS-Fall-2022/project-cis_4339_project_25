@@ -176,9 +176,9 @@
                 >
                   <td
                     class="p-2 text-left"
-                  >{{ client.firstName + " " + client.lastName }}</td>
-                  <td class="p-2 text-left">{{ client.userContact.address.city }}</td>
-                  <td class="p-2 text-left">{{ client.userContact.phoneNumber }}</td>
+                  >{{ attendeeData.firstName + " " + attendeeData.lastName }}</td>
+                  <td class="p-2 text-left">{{ attendeeData.userContact.address.city }}</td>
+                  <td class="p-2 text-left">{{ attendeeData.userContact.phoneNumber }}</td>
                 </tr>
               </tbody>
             </table>
@@ -201,8 +201,8 @@ export default {
   },
   data() {
     return {
-      userIDs: [],
-      userData: [],
+      // userIDs: [],
+      // userData: [],
       event: {
         eventName: "",
         eventDate: "",
@@ -221,7 +221,7 @@ export default {
   beforeMount() {
     axios
       .get(
-        import.meta.env.VITE_ROOT_API + `/eventdata/id/${this.$route.params.id}`
+        import.meta.env.VITE_ROOT_API + `/eventData/id/${this.$route.params.id}`
       )
       .then((resp) => {
         let data = resp.data[0];
@@ -230,17 +230,17 @@ export default {
         this.event.eventDate = DateTime.fromISO(data.date).plus({ days: 1 }).toISODate();
         this.event.eventInfo = data.eventInfo;
         this.event.eventAddress = data.eventAddress;
-        this.attendeeIDs = data.attendees;
-        for (let i = 0; i < this.attendeeIDs.length; i++) {
+        this.event.eventAttendees = data.eventAttendees;
+        for (let i = 0; i < this.eventAttendees.length; i++) { //fix this 
           axios
             .get(
               import.meta.env.VITE_ROOT_API +
-                `/userData/id/${this.userIDs[i]}`
+                `/userData/id/${this.user_id[i]}`
             )
             .then((resp) => {
               let data = resp.data[0];
               this.attendeeData.push({
-                attendeeID: this.attendeeIDs[i],
+                attendeeID: this.user_id[i],   ///
                 attendeeFirstName: data.firstName,
                 attendeeLastName: data.lastName,
                 attendeeCity: data.userContact.address.city,
