@@ -176,7 +176,7 @@
                 >
                   <td
                     class="p-2 text-left"
-                  >{{ attendeeData.firstName + " " + attendeeData.lastName }}</td>
+                  >{{ attendeeData.firstName + " " + attendeeData.lastName }}</td> //CHANGEATTENDEE DATA TO USER DATA
                   <td class="p-2 text-left">{{ attendeeData.userContact.address.city }}</td>
                   <td class="p-2 text-left">{{ attendeeData.userContact.phoneNumber }}</td>
                 </tr>
@@ -201,8 +201,8 @@ export default {
   },
   data() {
     return {
-      // userIDs: [],
-      // userData: [],
+      //userIDs: [],
+      userData: [],
       event: {
         eventName: "",
         eventDate: "",
@@ -231,7 +231,7 @@ export default {
         this.event.eventInfo = data.eventInfo;
         this.event.eventAddress = data.eventAddress;
         this.event.eventAttendees = data.eventAttendees;
-        for (let i = 0; i < this.eventAttendees.length; i++) { //fix this 
+        for (let i = 0; i < this.eventAttendees.length; i++) { 
           axios
             .get(
               import.meta.env.VITE_ROOT_API +
@@ -239,8 +239,8 @@ export default {
             )
             .then((resp) => {
               let data = resp.data[0];
-              this.attendeeData.push({
-                attendeeID: this.user_id[i],   ///
+              this.userData.push({
+                attendeeID: this.user_id[i],   ///[I]. OR .[]
                 attendeeFirstName: data.firstName,
                 attendeeLastName: data.lastName,
                 attendeeCity: data.userContact.address.city,
