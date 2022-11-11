@@ -243,8 +243,8 @@ export default {
                 attendeeID: this.attendeeIDs[i],
                 attendeeFirstName: data.firstName,
                 attendeeLastName: data.lastName,
-                attendeeCity: data.address.city,
-                attendeePhoneNumber: data.phoneNumbers[0].primaryPhone,
+                attendeeCity: data.userContact.address.city,
+                attendeePhoneNumber: data.userContact.phoneNumber[0],
               });
             });
         }
