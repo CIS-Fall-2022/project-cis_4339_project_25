@@ -55,6 +55,7 @@
               <span class="text-gray-700">Description</span>
               <textarea
                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                v-model="event.eventInfo"
                 rows="2"
               ></textarea>
             </label>
@@ -176,9 +177,9 @@
                 >
                   <td
                     class="p-2 text-left"
-                  >{{ userData.firstName + " " + userData.lastName }}</td> 
-                  <td class="p-2 text-left">{{ userData.userContact.address.city }}</td>
-                  <td class="p-2 text-left">{{ userData.userContact.phoneNumber }}</td>
+                  >{{ client.firstName + " " + client.lastName }}</td> 
+                  <td class="p-2 text-left">{{ client.city }}</td>
+                  <td class="p-2 text-left">{{ client.phoneNumber }}</td>
                 </tr>
               </tbody>
             </table>
@@ -202,16 +203,14 @@ export default {
   data() {
     return {
       // userIDs: [],
-      userData: {
+      queryData:[],
+      userData: [{
+        _id:"",
         firstName:"",
         lastName:"",
-        userContact:{
           phoneNumber:"",
-          address:{
-            city:""
-          },
-        }
-      },
+          city:"",
+      }],
       event: {
         eventName: "",
         eventDate: "",
@@ -224,7 +223,6 @@ export default {
           zip: "",
         },
         eventAttendees:[
-          {user_id:""}
         ]
       }
     };
@@ -243,16 +241,17 @@ export default {
         this.event.eventAddress = data.eventAddress;
         this.event.eventAttendees = data.eventAttendees;
         // this.event.user_id = data.eventAttendees.user_id;
-        for (let i = 0; i < this.eventAttendees.length; i++) { 
+        for (let i = 0; i < this.event.eventAttendees.length; i++) { 
           axios
             .get(
               import.meta.env.VITE_ROOT_API +
-                `/userData/id/${this.user_id[i]}`
+                `/userData/id/${this.event.eventAttendees[i].userid}`
             )
             .then((resp) => {
               let data = resp.data[0];
+              console.log(data)
               this.userData.push({
-                _id: this.user_id[i],   ///[I]. OR .[]
+                _id: this.event.eventAttendees[i].userid,   ///[I]. OR .[]
                 firstName: data.firstName,
                 lastName: data.lastName,
                 city: data.userContact.address.city,
