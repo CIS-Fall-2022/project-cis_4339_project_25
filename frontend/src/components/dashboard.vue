@@ -3,13 +3,13 @@
     <div>
       <h1 class="font-bold text-4xl text-red-700 tracking-widest text-center mt-10">Welcome to the Main Page</h1>
     </div>
-    <div>{{databasedata}}</div>
-    <dashChart
+    <!-- <div>{{databasedata}}</div> -->
+    <EventChart
               v-if="!loading && !error"
               :label="labels"
               :chart-data="attendees"
               style="margin-left: 75px; margin-right: 75px; margin-bottom: 75px;"
-    ></dashChart>
+    ></EventChart>
     <table>
       <thead class="bg-gray-50 text-xl">
             <tr>
@@ -29,7 +29,7 @@
 
 <script>
 import axios from "axios";
-import dashChart from "@/compenents/BarChart.vue";
+import EventChart from "@/compenents/BarChart.vue";
 export default {
   components:{
     dashChart,
@@ -39,6 +39,8 @@ export default {
             databasedata: {},
             labels:[],
             attendees:[],
+            loading: false,
+            error: null,
         };
     },
     methods: {
@@ -76,7 +78,7 @@ export default {
     },
     mounted() {
       this.fetchData();
-      condole.log()
+      console.log()
     },
   }
 </script>  

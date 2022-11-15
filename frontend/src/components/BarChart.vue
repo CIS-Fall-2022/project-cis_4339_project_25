@@ -1,7 +1,7 @@
 <template>
   <div>
-    <canvas ref="dashChart"></canvas>
-  </div>
+    <canvas ref="eventChart"></canvas>
+  </div>S
 </template>
   
 <script>
