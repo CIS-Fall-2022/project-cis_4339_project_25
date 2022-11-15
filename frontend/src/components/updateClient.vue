@@ -18,27 +18,24 @@ export default {
       //for multi select event Data
       eventData: [],
       // Client Data
-      client: {
+      user: {
         firstName: "",
         middleName: "",
         lastName: "",
-        email: "",
-        phoneNumbers: [
-          {
-            primaryPhone: "",
-            secondaryPhone: "",
+        userContact: {
+          address: {
+            line1: "",
+            line2: "",
+            city: "",
+            county: "",
+            zip: "",
           },
-        ],
-        address: {
-          line1: "",
-          line2: "",
-          city: "",
-          county: "",
-          zip: "",
+          email: "",
+          phoneNumber: ""
         },
       },
       // list of events shown in table
-      clientEvents: [],
+      userEvents: [],
     };
   },
   mounted() {
@@ -48,56 +45,53 @@ export default {
     axios
       .get(
         import.meta.env.VITE_ROOT_API +
-          `/primarydata/id/${this.$route.params.id}`
+          `/userData/id/${this.$route.params.id}`
       )
       .then((resp) => {
         let data = resp.data[0];
-        this.client.firstName = data.firstName;
-        this.client.middleName = data.middleName;
-        this.client.lastName = data.lastName;
-        this.client.email = data.email;
-        this.client.phoneNumbers[0].primaryPhone =
-          data.phoneNumbers[0].primaryPhone;
-        this.client.phoneNumbers[0].secondaryPhone =
-          data.phoneNumbers[0].secondaryPhone;
-        this.client.address.line1 = data.address.line1;
-        this.client.address.line2 = data.address.line2;
-        this.client.address.city = data.address.city;
-        this.client.address.county = data.address.county;
-        this.client.address.zip = data.address.zip;
+        this.user.firstName = data.firstName;
+        this.user.middleName = data.middleName;
+        this.user.lastName = data.lastName;
+        this.user.userContact.email = data.userContact.email;
+        this.user.userContact.phoneNumber =data.userContact.phoneNumber[0];
+        this.user.userContact.address.line1 = data.userContact.address.line1;
+        this.user.userContact.address.line2 = data.userContact.address.line2;
+        this.user.userContact.address.city = data.userContact.address.city;
+        this.user.userContact.address.county = data.userContact.address.county;
+        this.user.userContact.address.zip = data.userContact.address.zip;
       });
     axios
       .get(
         import.meta.env.VITE_ROOT_API +
-          `/eventdata/client/${this.$route.params.id}`
+          `/eventData/client/${this.$route.params.id}`
       )
       .then((resp) => {
         let data = resp.data;
-        resp.data.forEach((event) => {
-          this.clientEvents.push({
+        data.forEach((event) => {
+          this.userEvents.push({
             eventName: event.eventName,
-            eventDate: event.date,
+            eventDate: event.eventDate,
           });
         });
       });
-    axios.get(import.meta.env.VITE_ROOT_API + `/eventdata`).then((resp) => {
+    axios.get(import.meta.env.VITE_ROOT_API + `/eventData/client/not/${this.$route.params.id}`).then((resp) => {
       let data = resp.data;
       for (let i = 0; i < data.length; i++) {
         this.eventData.push({
           eventName: data[i].eventName,
           _id: data[i]._id,
-          attendees: data[i].attendees,
+          eventAttendees: data[i].eventAttendees,
         });
       }
     });
   },
   methods: {
     formattedDate(datetimeDB) {
-      return DateTime.fromISO(datetimeDB).plus({ days: 1 }).toLocaleString();
+      return DateTime.fromISO(datetimeDB).toLocaleString();
     },
     handleClientUpdate() {
-      let apiURL = import.meta.env.VITE_ROOT_API + `/primarydata/${this.id}`;
-      axios.put(apiURL, this.client).then(() => {
+      let apiURL = import.meta.env.VITE_ROOT_API + `/userData/${this.id}`;
+      axios.put(apiURL, this.user).then(() => {
         alert("Update has been saved.");
         this.$router.back().catch((error) => {
           console.log(error);
@@ -107,19 +101,22 @@ export default {
     addToEvent() {
       this.eventsChosen.forEach((event) => {
         let apiURL =
-          import.meta.env.VITE_ROOT_API + `/eventdata/addAttendee/` + event._id;
-        axios.put(apiURL, { attendee: this.$route.params.id }).then(() => {
-          this.clientEvents = [];
+          import.meta.env.VITE_ROOT_API + `/eventData/addAttendee/` + event._id;
+        axios.put(apiURL, { userid: this.$route.params.id, date_signup: new Date() }).then(() => {
+          this.userEvents = [];
+          this.eventData.splice(this.eventData.indexOf(event), 1);
+          this.eventsChosen.splice(this.eventsChosen.indexOf(event), 1);
           axios
             .get(
               import.meta.env.VITE_ROOT_API +
-                `/eventdata/client/${this.$route.params.id}`
+                `/eventData/client/${this.$route.params.id}`
             )
             .then((resp) => {
               let data = resp.data;
               for (let i = 0; i < data.length; i++) {
-                this.clientEvents.push({
+                this.userEvents.push({
                   eventName: data[i].eventName,
+                  eventDate: data[i].eventDate,
                 });
               }
             });
@@ -129,15 +126,13 @@ export default {
   },
   validations() {
     return {
-      client: {
+      user: {
         firstName: { required, alpha },
         lastName: { required, alpha },
-        email: { email },
-        phoneNumbers: [
-          {
-            primaryPhone: { required, numeric },
-          },
-        ],
+        userContact: {
+          email: {email},
+          phoneNumber: {required, numeric},
+        },
       },
     };
   },
@@ -161,12 +156,12 @@ export default {
                 type="text"
                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                 placeholder
-                v-model="client.firstName"
+                v-model="user.firstName"
               />
-              <span class="text-black" v-if="v$.client.firstName.$error">
+              <span class="text-black" v-if="v$.user.firstName.$error">
                 <p
                   class="text-red-700"
-                  v-for="error of v$.client.firstName.$errors"
+                  v-for="error of v$.user.firstName.$errors"
                   :key="error.$uid"
                 >{{ error.$message }}!</p>
               </span>
@@ -181,7 +176,7 @@ export default {
                 type="text"
                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                 placeholder
-                v-model="client.middleName"
+                v-model="user.middleName"
               />
             </label>
           </div>
@@ -195,12 +190,12 @@ export default {
                 type="text"
                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                 placeholder
-                v-model="client.lastName"
+                v-model="user.lastName"
               />
-              <span class="text-black" v-if="v$.client.lastName.$error">
+              <span class="text-black" v-if="v$.user.lastName.$error">
                 <p
                   class="text-red-700"
-                  v-for="error of v$.client.lastName.$errors"
+                  v-for="error of v$.user.lastName.$errors"
                   :key="error.$uid"
                 >{{ error.$message }}!</p>
               </span>
@@ -215,12 +210,12 @@ export default {
                 type="email"
                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                 pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
-                v-model="client.email"
+                v-model="user.userContact.email"
               />
-              <span class="text-black" v-if="v$.client.email.$error">
+              <span class="text-black" v-if="v$.user.userContact.email.$error">
                 <p
                   class="text-red-700"
-                  v-for="error of v$.client.email.$errors"
+                  v-for="error of v$.user.userContact.email.$errors"
                   :key="error.$uid"
                 >{{ error.$message }}!</p>
               </span>
@@ -235,12 +230,12 @@ export default {
                 type="text"
                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                 pattern="[0-9]{3}[0-9]{3}[0-9]{4}"
-                v-model="client.phoneNumbers[0].primaryPhone"
+                v-model="user.userContact.phoneNumber"
               />
-              <span class="text-black" v-if="v$.client.phoneNumbers[0].primaryPhone.$error">
+              <span class="text-black" v-if="v$.user.userContact.phoneNumber.$error">
                 <p
                   class="text-red-700"
-                  v-for="error of v$.client.phoneNumbers[0].primaryPhone.$errors"
+                  v-for="error of v$.user.userContact.phoneNumber.$errors"
                   :key="error.$uid"
                 >{{ error.$message }}!</p>
               </span>
@@ -271,7 +266,7 @@ export default {
               <input
                 type="text"
                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                v-model="client.address.line1"
+                v-model="user.userContact.address.line1"
               />
             </label>
           </div>
@@ -282,7 +277,7 @@ export default {
               <input
                 type="text"
                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                v-model="client.address.line2"
+                v-model="user.userContact.address.line2"
               />
             </label>
           </div>
@@ -294,7 +289,7 @@ export default {
               <input
                 type="text"
                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                v-model="client.address.city"
+                v-model="user.userContact.address.city"
               />
             </label>
           </div>
@@ -306,7 +301,7 @@ export default {
               <input
                 type="text"
                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                v-model="client.address.county"
+                v-model="user.userContact.address.county"
               />
             </label>
           </div>
@@ -317,7 +312,7 @@ export default {
               <input
                 type="text"
                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                v-model="client.address.zip"
+                v-model="user.userContact.address.zip"
               />
             </label>
           </div>
@@ -357,7 +352,7 @@ export default {
                 </tr>
               </thead>
               <tbody class="divide-y divide-gray-300">
-                <tr v-for="event in clientEvents" :key="event._id">
+                <tr v-for="event in userEvents" :key="event._id">
                   <td class="p-2 text-left">{{ event.eventName }}</td>
                   <td class="p-2 text-left">{{ formattedDate(event.eventDate) }}</td>
                 </tr>
@@ -372,6 +367,7 @@ export default {
               v-model="eventsChosen"
               :options="eventData"
               :multiple="true"
+              track-by="_id"
               label="eventName"
             ></VueMultiselect>
             <div class="flex justify-between">

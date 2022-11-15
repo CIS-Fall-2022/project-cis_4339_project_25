@@ -236,7 +236,7 @@ export default {
         let data = resp.data[0];
         this.event.eventName = data.eventName;
         console.log(data.date);
-        this.event.eventDate = DateTime.fromISO(data.date).plus({ days: 1 }).toISODate();
+        this.event.eventDate = DateTime.fromISO(data.eventDate).toISODate();
         this.event.eventInfo = data.eventInfo;
         this.event.eventAddress = data.eventAddress;
         this.event.eventAttendees = data.eventAttendees;

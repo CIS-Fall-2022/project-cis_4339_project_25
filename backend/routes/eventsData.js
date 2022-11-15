@@ -118,6 +118,22 @@ router.get("/client/:id", (req, res, next) => {
     );
 });
 
+//GET events for which a user is NOT signed up
+router.get("/client/not/:id", (req, res, next) => {
+    eventdata.find(
+        {"eventAttendees.userid": {"$ne": req.params.id}},
+        (error, data) => {
+            if (error) {
+                return next(error);
+            } else {
+                res.json(data)
+            }
+        }
+    );
+});
+
+
+
 //POST add event
 router.post("/", (req, res, next) => { 
     req.body.access = { orgid: orgaccess };
