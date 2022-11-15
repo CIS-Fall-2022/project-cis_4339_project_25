@@ -4,6 +4,12 @@
       <h1 class="font-bold text-4xl text-red-700 tracking-widest text-center mt-10">Welcome to the Main Page</h1>
     </div>
     <div>{{databasedata}}</div>
+    <dashChart
+              v-if="!loading && !error"
+              :label="labels"
+              :chart-data="attendees"
+              style="margin-left: 75px; margin-right: 75px; margin-bottom: 75px;"
+    ></dashChart>
     <table>
       <thead class="bg-gray-50 text-xl">
             <tr>
@@ -18,38 +24,61 @@
         </tr>
       </tbody>
     </table>
-    <Bar
-      :chart-options="chartOptions"
-      :chart-data="chartData"
-      :chart-id="chartId"
-      :dataset-id-key="datasetIdKey"
-      :plugins="plugins"
-      :css-classes="cssClasses"
-      :styles="styles"
-      :width="width"
-      :height="height"
-    />
   </main>
 </template>
+
 <script>
 import axios from "axios";
-
+import dashChart from "@/compenents/BarChart.vue";
 export default {
+  components:{
+    dashChart,
+  },
     data() {
         return {
             databasedata: {},
+            labels:[],
+            attendees:[],
         };
     },
-    async mounted() {
-        let newnewapiURL = import.meta.env.VITE_ROOT_API + `/eventData/countall`;
-        axios.get(newnewapiURL).then((resp) => {
-          this.databasedata = resp.data;
-        });
-    },
     methods: {
-        routePush(routeName) {
-            this.$router.push({ name: routeName });
-        },
+      async fetchData () {
+        try {
+          this.error = null;
+          this.loading = null;
+          const url ='http://localhost:3000/eventData/countall'
+          const response = await axios.get(url);
+          this.labels = response.data.map((item) => item.eventName);
+          this.attendees = response.data.map((item) => item.mycount);
+          this.databasedata = resp.data;
+        } catch (err) {
+          if (err.response){
+          //client recieved an error
+          this.error = {
+            title: "Server Response",
+            message: err.message,
+          };
+        } else if(err.request) {
+          //cleint never received a response, or request never left
+          this.error = {
+            title: "Unable to Reach Server",
+            message: err.message,
+          };
+        } else {
+          this.error = {
+            title: "Application Error",
+            message: err.message,
+          };
+        }
+        }
+        this.loading = false;
+      },
     },
-};
-</script>
+    mounted() {
+      this.fetchData();
+      condole.log()
+    },
+  }
+</script>  
+      
+
