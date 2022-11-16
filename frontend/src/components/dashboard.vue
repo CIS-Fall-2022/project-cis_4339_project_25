@@ -5,13 +5,14 @@
     </div>
     <div>
       <EventChart
-              v-if="!loading && !error"
               :label="labels"
               :chart-data="attendees"
               style="margin-left: 75px; margin-right: 75px; margin-bottom: 75px;"
             ></EventChart>
     </div>
-    <div>{{databasedata}}</div>
+    <!-- <div>{{databasedata}}</div>
+    <div>{{labels}}</div>
+    <div>{{attendees}}</div> -->
     <table>
       <thead class="bg-gray-50 text-xl">
             <tr>
@@ -32,11 +33,16 @@
 import axios from "axios";
 import EventChart from "@/components/BarChart.vue";
 export default {
+  components: {
+    EventChart,
+  },
     data() {
         return {
             databasedata: {},
             labels:[],
-            attendees: [],
+            attendees:[],
+            loading: false,
+            error: null,
         };
     },
     async mounted() {
@@ -44,7 +50,7 @@ export default {
         axios.get(newnewapiURL).then((resp) => {
           this.databasedata = resp.data;
           this.labels = resp.data.map((item) => item.eventName);
-          this.atendees = resp.data/map((item) => item.mycount);
+          this.attendees = resp.data.map((item) => item.mycount);
         });
     },
     methods: {

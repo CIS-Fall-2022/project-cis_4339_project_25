@@ -1,5 +1,5 @@
 <template>
-      <canvas ref="eventChart"></canvas>
+      <canvas ref="EventChart"></canvas>
 </template>
 
 <script>
@@ -17,7 +17,7 @@ props: {
 },
 async mounted() {
   console.log(this.chartData);
-  await new Chart(this.$refs.eventChart, {
+  await new Chart(this.$refs.EventChart, {
     type: "bar",
     data: {
       labels: this.label,
