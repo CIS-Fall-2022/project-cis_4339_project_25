@@ -3,6 +3,14 @@
     <div>
       <h1 class="font-bold text-4xl text-red-700 tracking-widest text-center mt-10">Welcome to the Main Page</h1>
     </div>
+    <div>
+      <EventChart
+              v-if="!loading && !error"
+              :label="labels"
+              :chart-data="attendees"
+              style="margin-left: 75px; margin-right: 75px; margin-bottom: 75px;"
+            ></EventChart>
+    </div>
     <div>{{databasedata}}</div>
     <table>
       <thead class="bg-gray-50 text-xl">
@@ -18,32 +26,25 @@
         </tr>
       </tbody>
     </table>
-    <Bar
-      :chart-options="chartOptions"
-      :chart-data="chartData"
-      :chart-id="chartId"
-      :dataset-id-key="datasetIdKey"
-      :plugins="plugins"
-      :css-classes="cssClasses"
-      :styles="styles"
-      :width="width"
-      :height="height"
-    />
   </main>
 </template>
 <script>
 import axios from "axios";
-
+import EventChart from "@/components/BarChart.vue";
 export default {
     data() {
         return {
             databasedata: {},
+            labels:[],
+            attendees: [],
         };
     },
     async mounted() {
         let newnewapiURL = import.meta.env.VITE_ROOT_API + `/eventData/countall`;
         axios.get(newnewapiURL).then((resp) => {
           this.databasedata = resp.data;
+          this.labels = resp.data.map((item) => item.eventName);
+          this.atendees = resp.data/map((item) => item.mycount);
         });
     },
     methods: {

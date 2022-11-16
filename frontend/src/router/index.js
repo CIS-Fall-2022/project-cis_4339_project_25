@@ -44,6 +44,11 @@ const routes = [
         path: '/delete',
         name: 'delete',
         component: () => import('../components/delete.vue')
+    },
+    {
+        path: '/barchart',
+        name: 'barchart',
+        component: () => import('../components/BarChart.vue')
     }
 ]
 const router = createRouter({
