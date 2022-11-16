@@ -1,11 +1,7 @@
 <template>
-<<<<<<< Updated upstream
   <div>
     <canvas ref="eventChart"></canvas>
-  </div>S
-=======
-    <canvas ref="eventChart"></canvas>
->>>>>>> Stashed changes
+  </div>
 </template>
   
 <script>
@@ -45,9 +41,7 @@ Chart.register(...registerables);
     });
   },
 };
-<<<<<<< Updated upstream
+
+
 </script>
 
-=======
-</script>
->>>>>>> Stashed changes
