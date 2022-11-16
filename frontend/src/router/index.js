@@ -39,6 +39,19 @@ const routes = [
         name: 'eventdetails',
         props: true,
         component: () => import('../components/eventDetails.vue')
+<<<<<<< Updated upstream
+=======
+    },
+    {
+        path: '/delete',
+        name: 'delete',
+        component: () => import('../components/delete.vue')
+    },
+    {
+        path: '/barchart',
+        name: 'barchart',
+        component: () => import('../components/BarChart.vue')
+>>>>>>> Stashed changes
     }
 ]
 const router = createRouter({

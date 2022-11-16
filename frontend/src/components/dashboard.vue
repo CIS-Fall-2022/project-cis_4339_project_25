@@ -3,13 +3,24 @@
     <div>
       <h1 class="font-bold text-4xl text-red-700 tracking-widest text-center mt-10">Welcome to the Main Page</h1>
     </div>
+<<<<<<< Updated upstream
     <!-- <div>{{databasedata}}</div> -->
     <EventChart
+=======
+    <div>
+      <BarChart
+>>>>>>> Stashed changes
               v-if="!loading && !error"
               :label="labels"
               :chart-data="attendees"
               style="margin-left: 75px; margin-right: 75px; margin-bottom: 75px;"
+<<<<<<< Updated upstream
     ></EventChart>
+=======
+            ></BarChart>
+    </div>
+    <div>{{databasedata}}</div>
+>>>>>>> Stashed changes
     <table>
       <thead class="bg-gray-50 text-xl">
             <tr>
@@ -29,7 +40,11 @@
 
 <script>
 import axios from "axios";
+<<<<<<< Updated upstream
 import EventChart from "@/compenents/BarChart.vue";
+=======
+import BarChart from "@/components/BarChart.vue"
+>>>>>>> Stashed changes
 export default {
   components:{
     dashChart,
@@ -39,8 +54,11 @@ export default {
             databasedata: {},
             labels:[],
             attendees:[],
+<<<<<<< Updated upstream
             loading: false,
             error: null,
+=======
+>>>>>>> Stashed changes
         };
     },
     methods: {
@@ -53,6 +71,7 @@ export default {
           this.labels = response.data.map((item) => item.eventName);
           this.attendees = response.data.map((item) => item.mycount);
           this.databasedata = resp.data;
+<<<<<<< Updated upstream
         } catch (err) {
           if (err.response){
           //client recieved an error
@@ -75,6 +94,11 @@ export default {
         }
         this.loading = false;
       },
+=======
+          this.labels = response.data.map((item) => item.eventName);
+          this.attendes = response.data.map((item) => item.attendees);
+        });
+>>>>>>> Stashed changes
     },
     mounted() {
       this.fetchData();
