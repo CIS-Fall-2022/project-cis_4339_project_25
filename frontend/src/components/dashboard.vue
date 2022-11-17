@@ -5,6 +5,7 @@
     </div>
     <div>
       <EventChart
+              
               :label="labels"
               :chart-data="attendees"
               style="margin-left: 75px; margin-right: 75px; margin-bottom: 75px;"
@@ -45,18 +46,49 @@ export default {
             error: null,
         };
     },
-    async mounted() {
-        let newnewapiURL = import.meta.env.VITE_ROOT_API + `/eventData/countall`;
-        axios.get(newnewapiURL).then((resp) => {
+    methods: {
+      async fetchdata() {
+        try {
+          this.error = null;
+          this.loading = true;
+          let newnewapiURL = import.meta.env.VITE_ROOT_API + `/eventData/countall`;
+          axios.get(newnewapiURL).then((resp) => {;
           this.databasedata = resp.data;
           this.labels = resp.data.map((item) => item.eventName);
           this.attendees = resp.data.map((item) => item.mycount);
-        });
+        })} catch (err) {
+          if (err.response) {
+            this.error = {
+              title: 'Server Response',
+              message: err.message,
+            };
+          } else if (err.request) {
+            this.error = {
+              title: "Unable to Reach Server",
+              message: err.message,
+            };
+          }
+        }
+        this.loading = false;
+      },
     },
-    methods: {
-        routePush(routeName) {
-            this.$router.push({ name: routeName });
-        },
+    mounted(){
+      this.fetchdata();
     },
-};
+  };
 </script>
+    // async mounted() {
+    //     let newnewapiURL = import.meta.env.VITE_ROOT_API + `/eventData/countall`;
+    //     axios.get(newnewapiURL).then((resp) => {
+    //       this.databasedata = resp.data;
+    //       this.labels = resp.data.map((item) => item.eventName);
+    //       this.attendees = resp.data.map((item) => item.mycount);
+    //     });
+//     },
+//     methods: {
+//         routePush(routeName) {
+//             this.$router.push({ name: routeName });
+//         },
+//     },
+// };
+
