@@ -3,13 +3,14 @@
     <div>
       <h1 class="font-bold text-4xl text-red-700 tracking-widest text-center mt-10">Welcome to the Main Page</h1>
     </div>
+    <PlanetChart />
     <div>
       <EventChart
-              
-              :label="labels"
-              :chart-data="attendees"
-              style="margin-left: 75px; margin-right: 75px; margin-bottom: 75px;"
-            ></EventChart>
+        v-if="!loading && !error"
+        :label="labels"
+        :chart-data="attendees"
+        style="margin-left: 75px; margin-right: 75px; margin-bottom: 75px;"
+      ></EventChart>
     </div>
     <!-- <div>{{databasedata}}</div>
     <div>{{labels}}</div>
@@ -33,9 +34,11 @@
 <script>
 import axios from "axios";
 import EventChart from "@/components/BarChart.vue";
+import PlanetChart from "@/components/PlanetChart.vue";
 export default {
   components: {
     EventChart,
+    PlanetChart,
   },
     data() {
         return {
