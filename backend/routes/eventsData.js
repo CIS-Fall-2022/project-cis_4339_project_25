@@ -136,16 +136,30 @@ router.get("/client/not/:id", (req, res, next) => {
 
 //POST add event
 router.post("/", (req, res, next) => { 
-    req.body.access = { orgid: orgaccess };
-    eventdata.create( 
-        req.body, 
-        (error, data) => { 
+    eventdata.find(
+        {'access.orgid': orgaccess, eventName: req.body.eventName}, 
+        (error, data) => {
             if (error) {
                 return next(error);
             } else {
-                res.json(data);
-            }
-        }
+                if (data.length > 0) {
+                    res.json('Event exist with that name already.');
+                }
+                if (data.length == 0) {
+                    req.body.access = { orgid: orgaccess };
+                    eventdata.create( 
+                        req.body, 
+                        (error, data) => { 
+                            if (error) {
+                                return next(error);
+                            } else {
+                                res.json(data);
+                            }
+                        }
+                    );
+                }
+            } 
+        }  
     );
 });
 /*

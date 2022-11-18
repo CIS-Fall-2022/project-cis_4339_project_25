@@ -172,11 +172,15 @@ export default {
       const isFormCorrect = await this.v$.$validate();
       // If no errors found. isFormCorrect = True then the form is submitted
       if (isFormCorrect) {
-        this.event.services = this.checkedServices;
+        
         let apiURL = import.meta.env.VITE_ROOT_API + `/eventdata`;
         axios
           .post(apiURL, this.event)
-          .then(() => {
+          .then((resp) => {
+            if (resp.data == 'Event exist with that name already.'){
+              alert('Event exist with that name already.');
+              return;
+            } else {
             alert("Event has been added.");
             this.$router.push("/findEvents");
             this.client = {
@@ -191,6 +195,7 @@ export default {
                 zip: "",
               }
             };
+          }
           })
           .catch((error) => {
             console.log(error);
