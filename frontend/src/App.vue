@@ -64,6 +64,7 @@
 </template>
 
 <script>
+import { enableTracking } from "@vue/reactivity";
 import axios from "axios";
 export default {
   name: "App",
@@ -76,8 +77,14 @@ export default {
     let apiURL = import.meta.env.VITE_ROOT_API + `/organizationData/currentorg`;
     axios.get(apiURL).then((resp) => {
       this.organizationName = resp.data[0].organizationName;
+    }).catch( error => {
+      if (!error.response) {
+        alert("Network Error Detected:\nPlease try again later or contact website admin.")
+      } else {
+        alert(error.response)
+      }
     });
-  }
+  },
 };
 </script>
 
