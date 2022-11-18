@@ -39,7 +39,11 @@ export default {
         let apiURL = import.meta.env.VITE_ROOT_API + `/userData/`;
         axios
           .post(apiURL, this.clientnew)
-          .then(() => {
+          .then((resp) => {
+            if (resp.data == 'User exist with that phone number already.') {
+              alert('User exist with that phone number already.')
+              return;
+            } else {
             alert("Client has been succesfully added.");
             this.$router.push("/findclient");
             this.clientnew = {
@@ -58,6 +62,7 @@ export default {
                 },
               },
             };
+            }
           })
           .catch((error) => {
             console.log(error);
