@@ -71,6 +71,7 @@ export default {
           this.userEvents.push({
             eventName: event.eventName,
             eventDate: event.eventDate,
+            _id: event._id
           });
         });
       });
@@ -86,6 +87,15 @@ export default {
     });
   },
   methods: {
+    removeFromEvent(eventid) {
+      let apiURL = import.meta.env.VITE_ROOT_API + `/eventData/removeAttendee/${eventid}?userid=${this.$route.params.id}`;
+      if(confirm(`Please confirm that you would like to delete this event.`))   {
+            alert("Confirmed")
+            axios.put(apiURL).then((resp) => {
+            this.$router.go();
+            });
+        }
+    },
     formattedDate(datetimeDB) {
       return DateTime.fromISO(datetimeDB).toLocaleString();
     },
@@ -349,12 +359,18 @@ export default {
                 <tr>
                   <th class="p-4 text-left">Event Name</th>
                   <th class="p-4 text-left">Date</th>
+                  <th class="p-4 text-left">Remove</th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-gray-300">
                 <tr v-for="event in userEvents" :key="event._id">
                   <td class="p-2 text-left">{{ event.eventName }}</td>
                   <td class="p-2 text-left">{{ formattedDate(event.eventDate) }}</td>
+                  <button
+                  @click="removeFromEvent(event._id)"
+                  type="submit"
+                  class="mt-1 bg-red-500 text-white"
+                  >Remove event</button>
                 </tr>
               </tbody>
             </table>

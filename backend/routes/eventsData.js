@@ -184,7 +184,7 @@ router.put("/:id", (req, res, next) => {
     );
 });
 */
-//put update check org access before updating user
+//put update check org access before updating event
 router.put("/:id", (req, res, next) => {
     eventdata.findOne(
         {_id: req.params.id},
@@ -246,6 +246,23 @@ router.put("/addAttendee/:id", (req, res, next) => {
                     res.json(`You already signed up for the event on ${signupdate}.`);
                 }
                 
+            }
+        }
+    );
+    
+});
+
+//PUT remove attendee from event with event id and user id
+router.put("/removeAttendee/:id", (req, res, next) => {
+    //only remove attendee if signed up
+    eventdata.updateOne(
+        { _id: req.params.id }, 
+        { $pull: { eventAttendees: {userid: req.query["userid"] }} },
+        (error, data) => {
+            if (error) {
+                return next(error);
+            } else {
+                res.json('Sucessfully removed user from the event.');
             }
         }
     );
