@@ -9,7 +9,7 @@ var orgaccess = process.env.ORGANIZATION_ACCESS;
 
 //GET all events
 router.get("/", (req, res, next) => { 
-    eventdata.find( 
+    eventdata.find( {access: {orgid: orgaccess}},
         (error, data) => {
             if (error) {
                 return next(error);
@@ -59,20 +59,25 @@ router.get("/count", (req, res, next) => {
 //GET all events that has user signed up in the past 2 months
 router.get("/countall", (req, res, next) => {
     var curdate = new Date();
-    var curdatestring = new Date().toISOString().slice(0,10).toString();
+    var curdate2 = new Date();
+    curdate2.setDate(curdate.getDate() + 1);
+    var curdatestring = curdate2.toISOString().slice(0,10).toString();
     curdate.setMonth(curdate.getMonth() -2);
     var bottomlimitdate = curdate.toISOString().slice(0,10).toString();
     console.log(curdatestring, bottomlimitdate)
+    console.log(orgaccess)
     eventdata.aggregate([
         {$project: 
-            {eventName: 1 ,mycount: 
+            {eventName: 1, access: 1 ,mycount: 
                 {$size: 
                     {$filter: 
                         {input: "$eventAttendees", as: "attendees", cond: 
                         {$and: [{$gte: ["$$attendees.date_signup", new Date(bottomlimitdate)]}, 
-                        {$lte: ["$$attendees.date_signup", new Date(curdatestring)]}]}}}}},
+                        {$lte: ["$$attendees.date_signup", new Date(curdatestring)]}
+                    ]}}}}},
                     },
-                    {$match: {"mycount": {$gt: 0}}}],(error, data) => {
+                    {$match: {"mycount": {$gt: 0}}},
+                    {$match: {access: {orgid: orgaccess}}}],(error, data) => {
         if (error) {
             return next(error)
         } else {
@@ -121,7 +126,7 @@ router.get("/client/:id", (req, res, next) => {
 //GET events for which a user is NOT signed up
 router.get("/client/not/:id", (req, res, next) => {
     eventdata.find(
-        {"eventAttendees.userid": {"$ne": req.params.id}},
+        {"eventAttendees.userid": {"$ne": req.params.id}, "access.orgid": orgaccess},
         (error, data) => {
             if (error) {
                 return next(error);
