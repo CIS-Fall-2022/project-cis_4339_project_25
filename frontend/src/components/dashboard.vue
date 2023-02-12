@@ -52,7 +52,7 @@ export default {
       try {
         this.error = null;
         this.loading = true;
-        const url = `http://localhost:3000/eventData/countall`;
+        const url = `http://localhost:3001/eventData/countall`;
         const resp = await axios.get(url);
         //"re-organizing" - mapping json from the response
         this.databasedata = resp.data;

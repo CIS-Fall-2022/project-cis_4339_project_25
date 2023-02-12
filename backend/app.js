@@ -24,7 +24,7 @@ mongoose
   });
 
 //declare port number for the api
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 //setup
 app.use(express.json());

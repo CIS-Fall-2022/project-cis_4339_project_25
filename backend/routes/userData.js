@@ -11,7 +11,7 @@ var orgaccess = process.env.ORGANIZATION_ACCESS;
 
 //GET all users
 router.get("/", (req, res, next) => { 
-    userdata.find( 
+    userdata.find( {access: {orgid: orgaccess}},
         (error, data) => {
             if (error) {
                 return next(error);
