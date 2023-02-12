@@ -11,9 +11,7 @@
         style="margin-left: 75px; margin-right: 75px; margin-bottom: 75px;"
       ></EventChart>
     </div>
-    <!-- <div>{{databasedata}}</div>
-    <div>{{labels}}</div>
-    <div>{{attendees}}</div> -->
+
     <table>
       <thead class="bg-gray-50 text-xl">
             <tr>
@@ -87,18 +85,5 @@ export default {
   },
 };
 </script>
-    // async mounted() {
-    //     let newnewapiURL = import.meta.env.VITE_ROOT_API + `/eventData/countall`;
-    //     axios.get(newnewapiURL).then((resp) => {
-    //       this.databasedata = resp.data;
-    //       this.labels = resp.data.map((item) => item.eventName);
-    //       this.attendees = resp.data.map((item) => item.mycount);
-    //     });
-//     },
-//     methods: {
-//         routePush(routeName) {
-//             this.$router.push({ name: routeName });
-//         },
-//     },
-// };
+
 

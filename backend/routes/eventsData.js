@@ -10,6 +10,7 @@ var orgaccess = process.env.ORGANIZATION_ACCESS;
 //GET all events
 router.get("/", (req, res, next) => { 
     eventdata.find( {access: {orgid: orgaccess}},
+    eventdata.find( {access: {orgid: orgaccess}},
         (error, data) => {
             if (error) {
                 return next(error);
@@ -66,10 +67,10 @@ router.get("/countall", (req, res, next) => {
     var bottomlimitdate = curdate.toISOString().slice(0,10).toString();
     bottomlimitdate.set
     console.log(curdatestring, bottomlimitdate)
-    console.log(orgaccess);
+    console.log(orgaccess)
     eventdata.aggregate([
         {$project: 
-            {eventName: 1 ,access: 1,mycount: 
+            {eventName: 1, access: 1 ,mycount: 
                 {$size: 
                     {$filter: 
                         {input: "$eventAttendees", as: "attendees", cond: 
@@ -78,8 +79,7 @@ router.get("/countall", (req, res, next) => {
                     ]}}}}},
                     },
                     {$match: {"mycount": {$gt: 0}}},
-                    {$match: {access: {orgid: orgaccess}}}
-                ],(error, data) => {
+                    {$match: {access: {orgid: orgaccess}}}],(error, data) => {
         if (error) {
             return next(error)
         } else {
