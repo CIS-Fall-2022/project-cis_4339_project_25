@@ -1,0 +1,113 @@
+GET http://127.0.0.1:3000/appointmentInfo
+bottom have duplicate but its different service for each time
+[
+    {
+        "id": 1,
+        "client_name": "Dan Doan",
+        "contact_phone": "832-566-3079",
+        "contact_email": "Dan@email.com",
+        "appt_date": "2023-03-01T06:00:00.000Z",
+        "start_time": "120000",
+        "service_type": "Hair Cut"
+    },
+    {
+        "id": 1,
+        "client_name": "Dan Doan",
+        "contact_phone": "832-566-3079",
+        "contact_email": "Dan@email.com",
+        "appt_date": "2023-03-01T06:00:00.000Z",
+        "start_time": "120000",
+        "service_type": "Beard Trim"
+    },
+    {
+        "id": 2,
+        "client_name": "John Doe",
+        "contact_phone": "888-333-2222",
+        "contact_email": "JD@email.com",
+        "appt_date": "2023-03-01T06:00:00.000Z",
+        "start_time": "130000",
+        "service_type": "Hair Cut"
+    },
+    {
+        "id": 3,
+        "client_name": "Jannet Doe",
+        "contact_phone": "111-222-3333",
+        "contact_email": "JDD@email.com",
+        "appt_date": "2023-03-12T06:00:00.000Z",
+        "start_time": "130000",
+        "service_type": "Line Ups"
+    }
+]
+
+GET http://127.0.0.1:3000/availableHour/20230302
+((changes based on date given format is yyyymmdd))
+((day have to be one of the available day in /daySchedule))
+[
+    "11:00:00",
+    "12:00:00",
+    "13:00:00",
+    "14:00:00",
+    "15:00:00",
+    "16:00:00",
+    "17:00:00",
+    "18:00:00",
+    "19:00:00"
+]
+
+GET http://127.0.0.1:3000/daySchedule
+[
+    {
+        "day_of_week": "friday"
+    },
+    {
+        "day_of_week": "saturday"
+    },
+    {
+        "day_of_week": "thursday"
+    },
+    {
+        "day_of_week": "tuesday"
+    },
+    {
+        "day_of_week": "wednesday"
+    }
+]
+
+GET http://127.0.0.1:3000/allServices
+[
+    {
+        "Hair Cut"
+    },
+    {
+        "Beard Trim"
+    },
+    {
+        "Line Ups"
+    }
+]
+
+POST http://127.0.0.1:3000/addAppt1Service
+
+BODY format
+
+{
+    "client_name": "Jannet Doe",
+    "contact_email": "JDD@email.com",
+    "contact_phone": "111-222-3333",
+    "service_id": "2",
+    "appt_date": "2023-03-12",
+    "start_time": "130000"
+}
+
+POST http://127.0.0.1:3000/addApptMultiService
+
+BODY format
+
+{
+    "client_name": "Jannet Doe",
+    "contact_email": "JDD@email.com",
+    "contact_phone": "111-222-3333",
+    "service_id": ["1", "2", "3"],
+    "appt_date": "2023-03-12",
+    "start_time": "130000"
+}
