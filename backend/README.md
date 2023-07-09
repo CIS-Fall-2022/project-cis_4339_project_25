@@ -24,5 +24,3 @@ It will also be used to link the organization to the user that sign up to their 
 ```
 npm start
 ```
-### NOTE
-Database connection is down, use for code analysis
