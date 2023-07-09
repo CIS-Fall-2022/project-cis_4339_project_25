@@ -21,3 +21,6 @@ Follow instructions in frontend README
 https://documenter.getpostman.com/view/23539438/2s83f5ouyA
 
 Use the link to see all the endpoints for our backend.
+
+### NOTE
+Database connection is down, use for code analysis
